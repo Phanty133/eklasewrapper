@@ -43,6 +43,29 @@ const password = "drosaparole"
 
 ## Reference
 
+* [class EklaseWrapper](#eklasewrapper)
+  * [EklaseWrapper()](#eklasewrapperusername-string-password-string-debug--false)
+  * [launch()](#launch-promisevoid)
+  * [authenticate()](#authenticate-promisenumber)
+  * [scrapeRecentGrades()](#scraperecentgradesupdatebuffer--true-promiseeklasetypesrecentgrade)
+  * [scrapeWeek()](#scrapeweekdate-date-updatebuffer--true-promiseeklasetypeslessonday)
+  * [loadMailIDs](#loadmailidsupdatebuffer--true-promise)
+  * [scrapeMail()](#scrapemailmailids-number-updatebuffer--true-promiseeklasetypesmailcontent)
+  * [scrapeAll()](#scrapeall-promisevoid)
+  * [checkForNewGrades()](#checkfornewgrades-promiseeklasetypesrecentgrade-wip)
+  * [checkForNewMail()](#checkfornewmailupdatebuffer--true-promisenumber)
+  * [countUnreadMail()](#countunreadmail-promisenumber)
+  * [getUnreadMail()](#getunreadmailmaxpages--5-promiseeklasetypesmailcontent)
+  * [stop()](#stop-promiseboolean)
+* [namespace EklaseTypes](#namespace-eklasetypes)
+  * [RecentGrade](#recentgrade)
+  * [Attachment](#attachment)
+  * [Homework](#homework)
+  * [Lesson](#lesson)
+  * [LessonDay](#lessonday)
+  * [MailContent](#mailcontent)
+  * [Mail](#mail)
+  * [ScrapeBuffer](#scrapebuffer)
 
 ### ```class EklaseWrapper```
 
