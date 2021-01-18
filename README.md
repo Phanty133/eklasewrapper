@@ -8,8 +8,15 @@ E-klase is accessed using a headless chrome browser with Puppeteer. Authenticati
 
 ## Example
 
+### ES6
+
 ```ts
-async () => {
+import { EklaseWrapper } from "eklasewrapper"
+
+const username = "mazaisjanitis"
+const password = "drosaparole"
+
+(async () => {
   const wrapper = new EklaseWrapper(username, password);
 
   // Initialization
@@ -33,7 +40,7 @@ async () => {
   */
   
   await wrapper.stop();
-}
+})();
 ```
 
 ## Reference
