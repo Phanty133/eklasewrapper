@@ -20,7 +20,7 @@ function sleep(time: number): Promise<void>{
 	});
 }
 
-export default class EklaseWrapper{
+export class EklaseWrapper{
 	url = {
 		base: "https://www.e-klase.lv/",
 		login: "https://my.e-klase.lv?v=15",
@@ -122,7 +122,7 @@ export default class EklaseWrapper{
 
 					if(cols[0].children[0].textContent) data.lesson = cols[0].children[0].textContent;
 					if(cols[1].children[1].textContent) data.date = cols[1].children[1].textContent;
-					if(cols[2].children[0].textContent) data.grade = cols[2].children[0].textContent;
+					if(cols[2].children[0].textContent) data.grade = cols[2].children[0].textContent.replace(/\n/g, "").trim();
 
 					gradeData.push(data);
 				}
@@ -136,7 +136,7 @@ export default class EklaseWrapper{
 		});
 	}
 
-	scrapeWeek(date: Date): Promise<EklaseTypes.LessonDay[]>{ // date - a date object with a day during the desired week
+	scrapeWeek(date: Date, updateBuffer = true): Promise<EklaseTypes.LessonDay[]>{ // date - a date object with a day during the desired week
 		return new Promise(async (res, rej) => {
 			if(!this.page){
 				throw this.error.noBrowser;
@@ -250,6 +250,8 @@ export default class EklaseWrapper{
 				return weekData;
 			}, curDate.valueOf());
 
+			if(updateBuffer) this.buffer.homework = data;
+
 			res(data);
 		});
 	}
@@ -276,7 +278,7 @@ export default class EklaseWrapper{
 		});
 	}
 
-	scrapeMail(mailIDs: number[]): Promise<EklaseTypes.MailContent[]>{ // How many emails to retrieve
+	scrapeMail(mailIDs: number[], updateBuffer = true): Promise<EklaseTypes.MailContent[]>{ // How many emails to retrieve
 		return new Promise(async (res, rej) => {
 			if(!this.page){
 				throw this.error.noBrowser;
@@ -305,9 +307,11 @@ export default class EklaseWrapper{
 
 			if(resp){
 				// @ts-ignore
-				this.buffer.mail.content = await resp.json();
+				const data: EklaseTypes.MailContent[] = await resp.json();
 
-				res(this.buffer.mail.content);
+				if(updateBuffer) this.buffer.mail.content = data;
+
+				res(data);
 			}
 			else{
 				rej();
@@ -334,7 +338,7 @@ export default class EklaseWrapper{
 			const newGrades: EklaseTypes.RecentGrade[] = [];
 
 			// Hopefully it's very unlikely that consecutive grades have the exact same subject, date and mark
-			// but tbh this is a very shitty solution
+			// but tbh this is a very shit solution
 
 			for(let i = 0; i < updatedGrades.length; i++){
 				if(compareRecentGrades(updatedGrades[i], this.buffer.recentGrades[i])) break;
@@ -346,7 +350,7 @@ export default class EklaseWrapper{
 		});
 	}
 
-	checkForNewMail(updateBuffer = true){ 
+	checkForNewMail(updateBuffer = true): Promise<number[]>{ 
 		return new Promise(async (res, rej) => {
 			const freshIDs = await this.loadMailIDs(false);
 			const curLength = this.buffer.mail.ids.length; // Set it here for future use in the case that updateBuffer is true
@@ -385,7 +389,7 @@ export default class EklaseWrapper{
 	}
 
 	getUnreadMail(maxPages = 5): Promise<EklaseTypes.MailContent[]>{ // How many pages the code will search (Equivalent to the last 20N emails)
-		// Extremely inefficient if the unread mail is spread out
+		// Inefficient if the unread mail is spread out
 		return new Promise<EklaseTypes.MailContent[]>(async (res, rej) => {
 			// Count amount of unread mail
 
@@ -424,5 +428,73 @@ export default class EklaseWrapper{
 				});
 			}
 		});
+	}
+}
+
+export declare namespace EklaseTypes {
+	interface RecentGrade{
+		lesson: string,
+		grade: string,
+		date: string
+	}
+	
+	interface Attachment{
+		text: string,
+		url: string
+	}
+	
+	interface Homework{
+		info?: string,
+		link?: Attachment,
+		author: string,
+		time: string,
+		date: string,
+		modifyDate?: string,
+		modifyTime?: string
+	}
+	
+	interface Lesson{
+		index: string,
+		lesson: string,
+		classroom: string,
+		homework: Homework[],
+		theme?: string,
+		grade?: string
+	}
+	
+	interface LessonDay{
+		lessons: Lesson[],
+		date: string
+	}
+	
+	interface MailContent{
+		attachments: string[],
+		authorId: number,
+		authorName: string,
+		body: string,
+		draftRecipients?: number[],
+		draftType?: any, // I have no idea what this property is
+		followUpStatus: string,
+		id: number,
+		previousMessageId?: number,
+		recipientsData: {
+			hideRecipients: boolean,
+			loadRecipientsSeparately: boolean,
+			recipients: number[]
+		},
+		status: string,
+		subject: string,
+		timeCreated: Date
+	}
+	
+	interface Mail{
+		ids: number[],
+		content: MailContent[]
+	}
+	
+	interface ScrapeBuffer{
+		recentGrades: RecentGrade[],
+		homework: LessonDay[],
+		mail: Mail
 	}
 }
