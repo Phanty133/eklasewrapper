@@ -5,9 +5,11 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc"
+    "build": "tsc",
+    "prepublish": "tsc"
   },
   "author": "",
+  "homepage": "https://github.com/Phanty133/eklasewrapper",
   "license": "ISC",
   "types": "index.d.ts",
   "dependencies": {
