@@ -8,8 +8,6 @@ E-klase is accessed using a headless chrome browser with Puppeteer. Authenticati
 
 ## Example
 
-### ES6
-
 ```ts
 import { EklaseWrapper } from "eklasewrapper"
 
