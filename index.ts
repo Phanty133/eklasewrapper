@@ -332,7 +332,7 @@ export class EklaseWrapper{
 		});
 	}
 
-	checkForNewGrades(): Promise<EklaseTypes.RecentGrade[]>{
+	checkForNewGrades(updateBuffer = true): Promise<EklaseTypes.RecentGrade[]>{
 		return new Promise<EklaseTypes.RecentGrade[]>(async (res, rej) => {
 			const updatedGrades: EklaseTypes.RecentGrade[] = await this.scrapeRecentGrades(false);
 			const newGrades: EklaseTypes.RecentGrade[] = [];
@@ -345,6 +345,8 @@ export class EklaseWrapper{
 
 				newGrades.push(updatedGrades[i]);
 			}
+
+			if(updateBuffer) this.buffer.recentGrades = updatedGrades;
 
 			res(newGrades);
 		});

@@ -1,6 +1,6 @@
 {
   "name": "eklasewrapper",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "An npm package designed to make connecting to e-klase and retrieving data from it as easy as possible.",
   "main": "dist/index.js",
   "scripts": {
