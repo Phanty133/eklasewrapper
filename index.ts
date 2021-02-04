@@ -500,29 +500,3 @@ export declare namespace EklaseTypes {
 		mail: Mail
 	}
 }
-
-(async () => {
-	const wrapper = new EklaseWrapper(username, password);
-  
-	// Initialization
-  
-	await wrapper.launch();
-	await wrapper.authenticate();
-  
-	// Obtaining data
-  
-	const recentGrades = await wrapper.scrapeRecentGrades();
-  
-	console.log(recentGrades);
-	/*
-	  Output:
-	  [
-		{ lesson: "Literatūra", date: "10.01.", grade: "5" },
-		{ lesson: "Matemātika", date: "06.01.", grade: "9" },
-		{ lesson: "Sports", date: "12.01.", grade: "1" },
-		...
-	  ]
-	*/
-	
-	await wrapper.stop();
-  })();
