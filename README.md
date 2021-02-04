@@ -43,29 +43,34 @@ const password = "drosaparole"
 
 ## Reference
 
-* [class EklaseWrapper](#eklasewrapper)
-  * [EklaseWrapper()](#eklasewrapperusername-string-password-string-debug--false)
-  * [launch()](#launch-promisevoid)
-  * [authenticate()](#authenticate-promisenumber)
-  * [scrapeRecentGrades()](#scraperecentgradesupdatebuffer--true-promiseeklasetypesrecentgrade)
-  * [scrapeWeek()](#scrapeweekdate-date-updatebuffer--true-promiseeklasetypeslessonday)
-  * [loadMailIDs](#loadmailidsupdatebuffer--true-promise)
-  * [scrapeMail()](#scrapemailmailids-number-updatebuffer--true-promiseeklasetypesmailcontent)
-  * [scrapeAll()](#scrapeall-promisevoid)
-  * [checkForNewGrades()](#checkfornewgrades-promiseeklasetypesrecentgrade-wip)
-  * [checkForNewMail()](#checkfornewmailupdatebuffer--true-promisenumber)
-  * [countUnreadMail()](#countunreadmail-promisenumber)
-  * [getUnreadMail()](#getunreadmailmaxpages--5-promiseeklasetypesmailcontent)
-  * [stop()](#stop-promiseboolean)
-* [namespace EklaseTypes](#namespace-eklasetypes)
-  * [RecentGrade](#recentgrade)
-  * [Attachment](#attachment)
-  * [Homework](#homework)
-  * [Lesson](#lesson)
-  * [LessonDay](#lessonday)
-  * [MailContent](#mailcontent)
-  * [Mail](#mail)
-  * [ScrapeBuffer](#scrapebuffer)
+- [eklasewrapper](#eklasewrapper)
+  - [How it works](#how-it-works)
+  - [Example](#example)
+  - [Reference](#reference)
+    - [```class EklaseWrapper```](#class-eklasewrapper)
+      - [`EklaseWrapper(username: string, password: string, debug = false)`](#eklasewrapperusername-string-password-string-debug--false)
+      - [`launch(): Promise<void>`](#launch-promisevoid)
+      - [`authenticate(): Promise<number>`](#authenticate-promisenumber)
+      - [`scrapeRecentGrades(updateBuffer = true): Promise<EklaseTypes.RecentGrade[]>`](#scraperecentgradesupdatebuffer--true-promiseeklasetypesrecentgrade)
+      - [`scrapeWeek(date: Date, updateBuffer = true): Promise<EklaseTypes.LessonDay[]>`](#scrapeweekdate-date-updatebuffer--true-promiseeklasetypeslessonday)
+      - [`loadMailIDs(updateBuffer = true)`: Promise<number>](#loadmailidsupdatebuffer--true-promisenumber)
+      - [`scrapeMail(mailIDs: number[], updateBuffer = true): Promise<EklaseTypes.MailContent[]>`](#scrapemailmailids-number-updatebuffer--true-promiseeklasetypesmailcontent)
+      - [`scrapeAll(): Promise<void>`](#scrapeall-promisevoid)
+      - [`checkForNewGrades(updateBuffer = true): Promise<EklaseTypes.RecentGrade[]>` WIP](#checkfornewgradesupdatebuffer--true-promiseeklasetypesrecentgrade-wip)
+      - [`checkForNewMail(updateBuffer = true): Promise<number[]>`](#checkfornewmailupdatebuffer--true-promisenumber)
+      - [`countUnreadMail(): Promise<number>`](#countunreadmail-promisenumber)
+      - [`getUnreadMail(maxPages = 5): Promise<EklaseTypes.MailContent[]>`](#getunreadmailmaxpages--5-promiseeklasetypesmailcontent)
+      - [`checkAuthentication(): Promise<boolean>`](#checkauthentication-promiseboolean)
+      - [`stop(): Promise<boolean>`](#stop-promiseboolean)
+    - [`namespace EklaseTypes`](#namespace-eklasetypes)
+      - [`RecentGrade`](#recentgrade)
+      - [`Attachment`](#attachment)
+      - [`Homework`](#homework)
+      - [`Lesson`](#lesson)
+      - [`LessonDay`](#lessonday)
+      - [`MailContent`](#mailcontent)
+      - [`Mail`](#mail)
+      - [`ScrapeBuffer`](#scrapebuffer)
 
 ### ```class EklaseWrapper```
 
@@ -123,10 +128,12 @@ Promise resolves to an array of [EklaseTypes.MailContent](#MailContent)
 
 Updates the entire internal buffer of the `EklaseWrapper` instance.
 
-#### `checkForNewGrades(): Promise<EklaseTypes.RecentGrade[]>` WIP
+#### `checkForNewGrades(updateBuffer = true): Promise<EklaseTypes.RecentGrade[]>` WIP
 *Requires e-klase subscription*
 
 Checks for and retrieves new grades that aren't in the internal buffer of the `EklaseWrapper` instance. This method *should* work, but it will fail if a new grade has the exact same lesson, date and grade as a previous grade.
+
+`updateBuffer` sets whether the method should update the `recentGrades` property of the internal buffer of the `EklaseWrapper` instance. 
 
 Promise resolves to an array of [EklaseTypes.RecentGrade](#RecentGrade)
 
@@ -154,6 +161,13 @@ Retrieves all emails that have status `unread`. Probably inefficient if the unre
 `maxPages` sets how many page equivalents the method should check for unread emails. Total max email check count is `maxPages * 20`
 
 Promise resolves to an array of [EklaseTypes.MailContent](#MailContent)
+
+#### `checkAuthentication(): Promise<boolean>`
+*Requires e-klase subscription by default*
+
+Checks if authentication still valid.
+
+Promise resolves to true if still authenticated, otherwise false.
 
 #### `stop(): Promise<boolean>`
 

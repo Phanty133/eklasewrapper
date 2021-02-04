@@ -416,6 +416,28 @@ export class EklaseWrapper{
 		});
 	}
 
+	checkAuthentication(): Promise<boolean>{
+		return new Promise<boolean>(async (res, rej) => {
+			if(!this.page){
+				throw this.error.noBrowser;
+			}
+
+			const resp = await this.page.goto(this.url.mailContent); // Go to the mail content URL because it loads the least data
+
+			if(resp){
+				if(resp.request().redirectChain().length === 0){ // Check if not redirected
+					res(true);
+				}
+				else{
+					res(false);
+				}
+			}
+			else{
+				rej();
+			}
+		});
+	}
+
 	stop(): Promise<boolean>{
 		return new Promise<boolean>((res, rej) => {
 			if(this.browser === undefined || this.browser === null){
