@@ -5,9 +5,9 @@ function addDays(date: Date, days: number){
 }
 
 function compareRecentGrades(a: EklaseTypes.RecentGrade, b: EklaseTypes.RecentGrade): boolean{
-	if(a.lesson !== b.lesson) return false;
-	if(a.date !== b.date) return false;
-	if(a.grade !== b.grade) return false;
+	if(a?.lesson !== b?.lesson) return false;
+	if(a?.date !== b?.date) return false;
+	if(a?.grade !== b?.grade) return false;
 
 	return true;
 }
