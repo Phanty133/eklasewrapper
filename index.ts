@@ -332,7 +332,7 @@ export class EklaseWrapper{
 		});
 	}
 
-	checkForNewGrades(): Promise<EklaseTypes.RecentGrade[]>{
+	checkForNewGrades(updateBuffer = true): Promise<EklaseTypes.RecentGrade[]>{
 		return new Promise<EklaseTypes.RecentGrade[]>(async (res, rej) => {
 			const updatedGrades: EklaseTypes.RecentGrade[] = await this.scrapeRecentGrades(false);
 			const newGrades: EklaseTypes.RecentGrade[] = [];
@@ -345,6 +345,8 @@ export class EklaseWrapper{
 
 				newGrades.push(updatedGrades[i]);
 			}
+
+			if(updateBuffer) this.buffer.recentGrades = updatedGrades;
 
 			res(newGrades);
 		});
@@ -498,3 +500,29 @@ export declare namespace EklaseTypes {
 		mail: Mail
 	}
 }
+
+(async () => {
+	const wrapper = new EklaseWrapper(username, password);
+  
+	// Initialization
+  
+	await wrapper.launch();
+	await wrapper.authenticate();
+  
+	// Obtaining data
+  
+	const recentGrades = await wrapper.scrapeRecentGrades();
+  
+	console.log(recentGrades);
+	/*
+	  Output:
+	  [
+		{ lesson: "Literatūra", date: "10.01.", grade: "5" },
+		{ lesson: "Matemātika", date: "06.01.", grade: "9" },
+		{ lesson: "Sports", date: "12.01.", grade: "1" },
+		...
+	  ]
+	*/
+	
+	await wrapper.stop();
+  })();
